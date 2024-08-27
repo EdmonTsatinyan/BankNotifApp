@@ -26,7 +26,7 @@ app.use("/api/seed", seedRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 
-console.log(1);
+console.log(7);
 
 
 const PORT = process.env.PORT ||8000
