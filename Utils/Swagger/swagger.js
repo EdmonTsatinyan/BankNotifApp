@@ -18,7 +18,7 @@ const options = {
         User: {
           type: "object",
           properties: {
-            phoneID: {
+            deviceID: {
               type: "string",
               description: "The phone ID of the user",
             },
@@ -34,7 +34,7 @@ const options = {
         Loan: {
           type: "object",
           properties: {
-            phoneID: {
+            deviceID: {
               type: "string",
               description: "The phone ID associated with the loan",
               example: "1234567890",
@@ -42,24 +42,6 @@ const options = {
             bankName: {
               type: "string",
               description: "Name of the bank providing the loan",
-              enum: [
-                "Ameriabank",
-                "Ardshinbank",
-                "Armeconombank",
-                "Artsakhbank",
-                "ACBA",
-                "AraratBank",
-                "Converse",
-                "HSBC",
-                "Inecobank",
-                "IDBank",
-                "Unibank",
-                "Evocabank",
-                "VTB",
-                "Byblos Bank",
-                "Mellat Bank",
-                "HayBusinessBank",
-              ],
               example: "Ameriabank",
             },
             amount: {
@@ -79,7 +61,7 @@ const options = {
               description: "End date of the loan",
               example: "2025-09-30",
             },
-            info: {
+            description: {
               type: "string",
               description: "Additional information about the loan",
               example: "Personal loan for car purchase",

@@ -6,7 +6,6 @@ import corsOptions from "./Config/corsOptions.js"
 import cors from "cors"
 import path from "path"
 import { fileURLToPath } from "url"
-import seedRouter from "./Route/seedRouter.js"
 import authRouter from "./Route/authRouter.js"
 import userRouter from "./Route/userRouter.js"
 import swaggerUI from "swagger-ui-express"
@@ -29,7 +28,6 @@ app.use("/api/swagger",
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-app.use("/api/seed", seedRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 

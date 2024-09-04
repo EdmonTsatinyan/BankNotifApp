@@ -4,21 +4,21 @@ const userController = {
   addLoan: async (req, res) => {
     try {
       const {
-        phoneID,
+        deviceID,
         bankName,
         amount,
         dueDate,
         endDate,
-        info,
+        description,
         amountValute
       } = req.body;
       const response = await userService.addLoan(
-        phoneID,
+        deviceID,
         bankName,
         amount,
         dueDate,
         endDate,
-        info,
+        description,
         amountValute
       );
 
@@ -34,7 +34,7 @@ const userController = {
         amount,
         dueDate,
         endDate,
-        info,
+        description,
         amountValute
       } = req.body;
       const loanID = req.params.loanID;
@@ -44,7 +44,7 @@ const userController = {
         amount,
         dueDate,
         endDate,
-        info,
+        description,
         amountValute
       );
       res.status(response.status).send(response.message);

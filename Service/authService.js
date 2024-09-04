@@ -1,46 +1,62 @@
 import { User } from "../Model/userModel.js";
 
 const authService = {
-  logIN: async (phoneID) => {
-    
-    if(phoneID){
-        const user = await User.findOne({ phoneID }).populate("loans");
+  logIN: async (deviceID) => {
+    if (deviceID) {
+      const user = await User.findOne({ deviceID }).populate("loans");
       if (user) {
-        
-        const today = new Date().getDate();
+        const today = new Date();
 
-        const dayDifference = (day1, day2) => {
-          const diff = Math.abs(day1 - day2);
-          return Math.min(diff, 30 - diff);
+        
+        const daysDifference = (date1, date2) => {
+          const timeDiff = date1.getTime() - date2.getTime();
+          return Math.ceil(timeDiff / (1000 * 3600 * 24));
         };
-        user.loans = user.loans.sort((a,b)=> {
-          const dayA = new Date(a.dueDate).getDate();
-          const dayB = new Date(b.dueDate).getDate();
         
-          const diffA = dayDifference(today, dayA);
-          const diffB = dayDifference(today, dayB);
         
+        user.loans = user.loans.sort((a, b) => {
+          const dateA = new Date(a.dueDate);
+          const dateB = new Date(b.dueDate);
+        
+          const diffA = daysDifference(dateA, today);
+          const diffB = daysDifference(dateB, today);
+        
+          
+          if (diffA < 0 && diffB >= 0) return -1;
+          if (diffA >= 0 && diffB < 0) return 1;
+        
+         
           return diffA - diffB;
-        })
-        await user.save()
+        });
+        
+       
+        const loanDates = user.loans.map((loan) => {
+          const dueDate = new Date(loan.dueDate);
+          const diff = daysDifference(dueDate, today);
+        
+          return `${diff} days`;
+        });
+        
+        console.log(loanDates);
+        
+        
+        await user.save();
         
 
-          return { status: 200, message: "Logged in successfully", user };
-        
+        return { status: 200, message: "Logged in successfully", user };
       } else {
-            const newUser = new User({
-                phoneID,
-                loans:[]
-            })
+        const newUser = new User({
+          deviceID,
+          loans: [],
+        });
 
-            await newUser.save()
+        await newUser.save();
 
-            return{status:200, message:"New User created!", user: newUser}
+        return { status: 200, message: "New User created!", user: newUser };
       }
-    }else{
-        return {status: 400, message: "Bad Request"}
+    } else {
+      return { status: 400, message: "Bad Request" };
     }
-    
   },
 };
 

@@ -3,9 +3,9 @@ import authService from "../Service/authService.js"
 const authController = {
 logIN: async (req,res) =>{
     try {
-        const phoneID = req.params.phoneID
+        const deviceID = req.params.deviceID
 
-        const response = await authService.logIN(phoneID)
+        const response = await authService.logIN(deviceID)
         
         if(response.status < 400){
             res.status(response.status).send({user: response.user, message: response.message})

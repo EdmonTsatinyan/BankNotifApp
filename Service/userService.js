@@ -3,24 +3,24 @@ import mongoose from "mongoose";
 
 const userService = {
   addLoan: async (
-    phoneID,
+    deviceID,
     bankName,
     amount,
     dueDate,
     endDate,
-    info,
+    description,
     amountValute
   ) => {
-    if ((phoneID, bankName, amount, dueDate, endDate, info, amountValute)) {
-      const user = await User.findOne({ phoneID });
+    if ((deviceID, bankName, amount, dueDate, endDate, description, amountValute)) {
+      const user = await User.findOne({ deviceID });
 
       const newLoanData = {
-        phoneID,
+        deviceID,
         bankName,
         amount,
         dueDate: new Date(dueDate),
         endDate: new Date(endDate),
-        info,
+        description,
         amountValute,
         paidStatus: false,
       };
@@ -46,7 +46,7 @@ const userService = {
     amount,
     dueDate,
     endDate,
-    info,
+    description,
     amountValute
   ) => {
     if (loanID) {
@@ -55,7 +55,7 @@ const userService = {
         amount: amount,
         dueDate: dueDate,
         endDate: endDate,
-        info: info,
+        description: description,
         amountValute: amountValute,
       };
 

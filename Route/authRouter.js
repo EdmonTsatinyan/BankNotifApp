@@ -11,17 +11,17 @@ const authRouter = express.Router();
 
 /**
  * @swagger
- * /api/auth/signIn/{phoneID}:
+ * /api/auth/signIn/{deviceID}:
  *   post:
- *     summary: User login with phone ID
+ *     summary: User login with device ID
  *     tags: [Auth]  
  *     parameters:
  *       - in: path
- *         name: phoneID
+ *         name: deviceID
  *         schema:
  *           type: string
  *         required: true
- *         description: The phone ID of the user
+ *         description: The device ID of the user
  *     responses:
  *       200:
  *         description: Successful login
@@ -32,6 +32,6 @@ const authRouter = express.Router();
  *       400:
  *         description: Bad Request
  */
-authRouter.post("/signIn/:phoneID", authController.logIN);
+authRouter.post("/signIn/:deviceID", authController.logIN);
 
 export default authRouter;
