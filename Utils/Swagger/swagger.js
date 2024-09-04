@@ -10,8 +10,8 @@ const options = {
       description: "Loan managing app",
     },
     servers: [
-      { url: "http://localhost:3499" },
-      { url: "http://example.com" },
+      { url: "http://195.181.242.194:5001/" },
+     
     ],
     components: {
       schemas: {
