@@ -9,6 +9,33 @@ const userRouter = express.Router();
  *   description: User and Loan managing APIs
  */
 
+
+/**
+ * @swagger
+ * /api/user/{deviceID}:
+ *   get:
+ *     summary: Get device loans
+ *     tags: [Users]  
+ *     parameters:
+ *       - in: path
+ *         name: deviceID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The device ID of the user
+ *     responses:
+ *       200:
+ *         description: Successful get
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request
+ */
+
+userRouter.get("/:deviceID", userController.getDeviceLoans)
+
 /**
  * @swagger
  * /api/user/addLoan:

@@ -1,6 +1,22 @@
 import userService from "../Service/userService.js";
 
 const userController = {
+  getDeviceLoans : async(req,res)=>{
+    try {
+      const {deviceID} = req.params
+
+      const data = await userService.getDeviceLoans(deviceID)
+
+      if(data.status < 400){
+        res.status(data.status).send({user:data.user, hasLoans:data.hasLoans})
+      }else{
+        res.status(data.status).send({message:data.message})
+      }
+      
+    } catch (error) {
+      console.error(error)
+    }
+  },
   addLoan: async (req, res) => {
     try {
       const {

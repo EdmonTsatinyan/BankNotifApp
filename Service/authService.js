@@ -5,45 +5,14 @@ const authService = {
     if (deviceID) {
       const user = await User.findOne({ deviceID }).populate("loans");
       if (user) {
-        const today = new Date();
+        
+        if(user.loans.length > 0){
 
-        
-        const daysDifference = (date1, date2) => {
-          const timeDiff = date1.getTime() - date2.getTime();
-          return Math.ceil(timeDiff / (1000 * 3600 * 24));
-        };
-        
-        
-        user.loans = user.loans.sort((a, b) => {
-          const dateA = new Date(a.dueDate);
-          const dateB = new Date(b.dueDate);
-        
-          const diffA = daysDifference(dateA, today);
-          const diffB = daysDifference(dateB, today);
-        
-          
-          if (diffA < 0 && diffB >= 0) return -1;
-          if (diffA >= 0 && diffB < 0) return 1;
-        
-         
-          return diffA - diffB;
-        });
-        
-       
-        const loanDates = user.loans.map((loan) => {
-          const dueDate = new Date(loan.dueDate);
-          const diff = daysDifference(dueDate, today);
-        
-          return `${diff} days`;
-        });
-        
-        console.log(loanDates);
-        
-        
-        await user.save();
-        
+          return { status: 200, message: "Logged in successfully", hasLoans :true, user };
+        }else{
+          return { status: 200, message: "Logged in successfully", hasLoans :false , user};
+        }
 
-        return { status: 200, message: "Logged in successfully", user };
       } else {
         const newUser = new User({
           deviceID,
@@ -52,7 +21,7 @@ const authService = {
 
         await newUser.save();
 
-        return { status: 200, message: "New User created!", user: newUser };
+        return { status: 200, message: "New User created!", user: newUser, hasLoans: false };
       }
     } else {
       return { status: 400, message: "Bad Request" };

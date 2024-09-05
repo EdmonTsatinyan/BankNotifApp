@@ -8,7 +8,7 @@ logIN: async (req,res) =>{
         const response = await authService.logIN(deviceID)
         
         if(response.status < 400){
-            res.status(response.status).send({user: response.user, message: response.message})
+            res.status(response.status).send({user: response.user, message: response.message, hasLoans : response.hasLoans})
         }else{
             res.status(response.status).send({message:response.message})
         }

@@ -29,6 +29,10 @@ const options = {
                 },
                 description: "List of loans associated with the user"
               },
+              hasLoans : {
+                type: "boolean",
+                description:  "Does User Have Loans"
+              }
           },
         },
         Loan: {

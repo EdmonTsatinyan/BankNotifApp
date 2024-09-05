@@ -2,6 +2,55 @@ import { Loan, User } from "../Model/userModel.js";
 import mongoose from "mongoose";
 
 const userService = {
+  getDeviceLoans: async (deviceID) => {
+    if (deviceID) {
+      const user = await User.findOne({ deviceID }).populate("loans");
+      if (user) {
+        const today = new Date();
+
+        const daysDifference = (date1, date2) => {
+          const timeDiff = date1.getTime() - date2.getTime();
+          return Math.ceil(timeDiff / (1000 * 3600 * 24));
+        };
+
+        user.loans = user.loans.sort((a, b) => {
+          const dateA = new Date(a.dueDate);
+          const dateB = new Date(b.dueDate);
+
+          const diffA = daysDifference(dateA, today);
+          const diffB = daysDifference(dateB, today);
+
+          if (diffA < 0 && diffB >= 0) return -1;
+          if (diffA >= 0 && diffB < 0) return 1;
+
+          return diffA - diffB;
+        });
+
+        const loanDates = user.loans.map((loan) => {
+          const dueDate = new Date(loan.dueDate);
+          const diff = daysDifference(dueDate, today);
+
+          return `${diff} days`;
+        });
+
+
+
+        await user.save();
+
+        if(user.loans.length  > 0){
+
+          return {status: 200, user, hasLoans: true}
+        }else{
+          return {status: 200, user, hasLoans: false}
+        }
+
+      }else{
+        return {status:404, message: "User Not Found Invalid deviceID"}
+      }
+    } else {
+      return { status: 400, message: "Bad Request" };
+    }
+  },
   addLoan: async (
     deviceID,
     bankName,
@@ -11,7 +60,9 @@ const userService = {
     description,
     amountValute
   ) => {
-    if ((deviceID, bankName, amount, dueDate, endDate, description, amountValute)) {
+    if (
+      (deviceID, bankName, amount, dueDate, endDate, description, amountValute)
+    ) {
       const user = await User.findOne({ deviceID });
 
       const newLoanData = {
@@ -74,8 +125,7 @@ const userService = {
     }
   },
   changePaidStatus: async (loanID, paidStatus) => {
-
-    if(loanID,paidStatus){
+    if ((loanID, paidStatus)) {
       const updatedStatus = await Loan.findByIdAndUpdate(
         loanID,
         { $set: { paidStatus: paidStatus } },
@@ -86,10 +136,9 @@ const userService = {
       } else {
         return { status: 400, message: "Failed to update PaidStatus" };
       }
-    }else{
-      return {status:400, message: "Bad Request"}
+    } else {
+      return { status: 400, message: "Bad Request" };
     }
- 
   },
 };
 
