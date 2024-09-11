@@ -10,7 +10,8 @@ const options = {
       description: "Loan managing app",
     },
     servers: [
-      { url: "http://195.181.242.194:5001/" },
+      { url: "http://195.181.242.194:5001/"},
+      {url :"http://localhost:3499" }
      
     ],
     components: {
@@ -21,6 +22,10 @@ const options = {
             deviceID: {
               type: "string",
               description: "The phone ID of the user",
+            },
+            firebaseToken : {
+              type : "string",
+              description : "The Firebase Token"
             },
             loans: {
                 type: "array",

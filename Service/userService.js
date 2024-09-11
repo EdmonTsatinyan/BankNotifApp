@@ -1,6 +1,22 @@
 import { Loan, User } from "../Model/userModel.js";
 import mongoose from "mongoose";
 
+
+function addOneMonth(dateString) {
+  const date = new Date(dateString);
+
+
+  date.setMonth(date.getMonth() + 1);
+
+
+  if (date.getDate() < new Date(dateString).getDate()) {
+
+      date.setDate(0);
+  }
+
+  return date.toISOString(); 
+}
+
 const userService = {
   getDeviceLoans: async (deviceID) => {
     if (deviceID) {
@@ -51,18 +67,9 @@ const userService = {
       return { status: 400, message: "Bad Request" };
     }
   },
-  addLoan: async (
-    deviceID,
-    bankName,
-    amount,
-    dueDate,
-    endDate,
-    description,
-    amountValute
-  ) => {
-    if (
-      (deviceID, bankName, amount, dueDate, endDate, description, amountValute)
-    ) {
+  addLoan: async (deviceID,bankName,amount,dueDate,endDate,description,amountValute) => {
+    if (deviceID, bankName, amount, dueDate, endDate, description, amountValute) {
+     
       const user = await User.findOne({ deviceID });
 
       const newLoanData = {
@@ -77,9 +84,12 @@ const userService = {
       };
 
       if (user) {
-        const newLoan = await Loan.create(newLoanData);
+        
+        const newLoan = new Loan(newLoanData);
+    
+       
         user.loans.push(newLoan._id);
-        await user.save();
+        await Promise.all([user.save(),newLoan.save()])
         return { status: 200, message: "New Loan Created Successfully!" };
       } else {
         return {
@@ -124,13 +134,21 @@ const userService = {
       return { status: 400, message: "Bad Request" };
     }
   },
-  changePaidStatus: async (loanID, paidStatus) => {
-    if ((loanID, paidStatus)) {
+  changePaidStatus: async (loanID) => {
+    if ((loanID)) {
+      const findLoan = await Loan.findById(loanID)
+      const newDueDate = addOneMonth(findLoan.dueDate);
       const updatedStatus = await Loan.findByIdAndUpdate(
         loanID,
-        { $set: { paidStatus: paidStatus } },
+        {  paidStatus: true, 
+          dueDate: new Date(newDueDate) },
         { new: true }
       );
+
+      if(updatedStatus.dueDate.toISOString().split('T')[0] === updatedStatus.endDate.toISOString().split('T')[0]){
+        console.log("prcar brats");
+      }
+
       if (updatedStatus) {
         return { status: 200, message: "Updated paidStatus successfully!" };
       } else {

@@ -96,15 +96,6 @@ userRouter.put("/changeLoan/:loanID", userController.changeLoan);
  *           type: string
  *         required: true
  *         description: The ID of the loan to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               paidStatus:
- *                 type: boolean
  *     responses:
  *       200:
  *         description: Updated paidStatus successfully

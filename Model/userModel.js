@@ -2,7 +2,8 @@ import mongoose from "mongoose";
  
  
 const userSchema = new mongoose.Schema({ 
-    deviceID:{type:String, required:true}, 
+    deviceID:{type:String, required:true},
+    firebaseToken: {type : String, required:true}, 
     loans:[{type:mongoose.Schema.Types.ObjectId, ref:"Loan"}] 
 }) 
  

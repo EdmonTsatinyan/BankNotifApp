@@ -8,20 +8,30 @@ const authRouter = express.Router();
  *   name: Auth
  *   description: Authorization managing API
  */
-
 /**
  * @swagger
- * /api/auth/signIn/{deviceID}:
+ * /api/auth/signIn:
  *   post:
  *     summary: User login with device ID
- *     tags: [Auth]  
- *     parameters:
- *       - in: path
- *         name: deviceID
- *         schema:
- *           type: string
- *         required: true
- *         description: The device ID of the user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               deviceID:
+ *                 type: string
+ *                 example: "abc123"
+ *                 description: Unique identifier for the device.
+ *               firebaseToken:
+ *                 type: string
+ *                 example: "your_firebase_token_here"
+ *                 description: Firebase token for the device.
+ *             required:
+ *               - deviceID
+ *               - firebaseToken  
  *     responses:
  *       200:
  *         description: Successful login
@@ -32,6 +42,6 @@ const authRouter = express.Router();
  *       400:
  *         description: Bad Request
  */
-authRouter.post("/signIn/:deviceID", authController.logIN);
+authRouter.post("/signIn", authController.logIN);
 
 export default authRouter;

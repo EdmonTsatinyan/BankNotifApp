@@ -19,15 +19,9 @@ const userController = {
   },
   addLoan: async (req, res) => {
     try {
-      const {
-        deviceID,
-        bankName,
-        amount,
-        dueDate,
-        endDate,
-        description,
-        amountValute
-      } = req.body;
+     
+      const {deviceID,bankName,amount,dueDate,endDate,description,amountValute} = req.body;
+  
       const response = await userService.addLoan(
         deviceID,
         bankName,
@@ -37,7 +31,6 @@ const userController = {
         description,
         amountValute
       );
-
       res.status(response.status).send({message: response.message});
     } catch (error) {
       res.status(500).send({ message: "Internal Server Error" });
@@ -71,9 +64,8 @@ const userController = {
   changePaidStatus: async (req, res) => {
     try {
       const loanID = req.params.loanID;
-      const { paidStatus } = req.body;
 
-      const response = await userService.changePaidStatus(loanID, paidStatus);
+      const response = await userService.changePaidStatus(loanID);
 
       res.status(response.status).send(response.message);
     } catch (error) {

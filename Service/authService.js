@@ -1,7 +1,7 @@
 import { User } from "../Model/userModel.js";
 
 const authService = {
-  logIN: async (deviceID) => {
+  logIN: async (deviceID,firebaseToken) => {
     if (deviceID) {
       const user = await User.findOne({ deviceID }).populate("loans");
       if (user) {
@@ -16,6 +16,7 @@ const authService = {
       } else {
         const newUser = new User({
           deviceID,
+          firebaseToken,
           loans: [],
         });
 
