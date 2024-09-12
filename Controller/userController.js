@@ -56,7 +56,7 @@ const userController = {
         description,
         amountValute
       );
-      res.status(response.status).send(response.message);
+      res.status(response.status).send({message: response.message});
     } catch (error) {
       res.status(500).send({ message: "Internal Server Error" });
     }
@@ -67,11 +67,29 @@ const userController = {
 
       const response = await userService.changePaidStatus(loanID);
 
-      res.status(response.status).send(response.message);
+      if(response.status < 400){
+        res.status(response.status).send({message: response.message, success: response.success, isEnded: response.isEnded})
+      }else{
+        res.status(response.status).send({message: response.message, success: response.success})
+      }
     } catch (error) {
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
+  removeLoan : async(req,res)=>{
+    try {
+      const {loanID} = req.params
+
+      const data = await userService.removeLoan(loanID)
+
+  
+        res.status(data.status).send({message:data.message, success: data.success})
+      
+    } catch (error) {
+      console.error(error)
+      res.status(500).send({message:"Internal Server Error"})
+    }
+  }
 };
 
 export default userController;

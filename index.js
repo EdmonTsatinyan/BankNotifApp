@@ -48,16 +48,16 @@ const sendPushNotification = (token,loan) => {
   if(token && loan){
     const date = new Date(loan.dueDate);
 
-  const formattedDate = date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+    const formattedDate = date.toLocaleDateString("hy-AM", {
+      day: "2-digit",
+      month: "short", 
+      year: "numeric",
+    });
 
   const message = {
 	  notification: {
-		title: 'Loan payment',
-		body: `Remember to pay ${loan.amountValute} ${loan.amount} for ${loan.bankName} before ${formattedDate}.`,
+		title: 'Վարկի վճարում',
+		body: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
 	  },
 	  token: token,
 	};
@@ -88,11 +88,11 @@ async function handleNotifications() {
     const user = await User.findOne({deviceID: loan.deviceID})
     if(user){
       if(loan.dueDate.toISOString().split('T')[0] === today.toISOString().split('T')[0]){
-        console.log("--------",{loan, message: "Today is your loan pay day"});
+       
         sendPushNotification(user.firebaseToken,loan)  
       }
       if(loan.dueDate.toISOString().split('T')[0] === tomorrow.toISOString().split('T')[0]){
-        console.log("-------",{loan, message: "Tomorrow is your loan pay day"});
+
         sendPushNotification(user.firebaseToken,loan)  
       }
     }

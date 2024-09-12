@@ -38,7 +38,7 @@ const authRouter = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Login'
  *       400:
  *         description: Bad Request
  */

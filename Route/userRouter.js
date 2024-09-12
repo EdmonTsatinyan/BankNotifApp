@@ -99,9 +99,88 @@ userRouter.put("/changeLoan/:loanID", userController.changeLoan);
  *     responses:
  *       200:
  *         description: Updated paidStatus successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated paidStatus successfully!"
+ *                   description: Response message
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                   description: Operation success status
+ *                 isEneded:
+ *                   type: boolean
+ *                   example: true
+ *                   description: Operation success status
  *       400:
  *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to update PaidStatus"
+ *                   description: Response message
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                   description: Operation success status
  */
 userRouter.put("/changePaidStatus/:loanID", userController.changePaidStatus);
+
+
+
+/**
+ * @swagger
+ * /api/user/removeLoan/{loanID}:
+ *   delete:
+ *     summary: Delete Loan
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: loanID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the loan to delete
+ *     responses:
+ *       200:
+ *         description: Loan Removed Successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: " Loan Removed successfully!"
+ *                   description: Response message
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                   description: Operation success status
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to remove Loan"
+ *                   description: Response message
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                   description: Operation success status
+ */
+userRouter.delete("/removeLoan/:loanID", userController.removeLoan);
 
 export default userRouter;

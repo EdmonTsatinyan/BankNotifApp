@@ -8,9 +8,9 @@ const authService = {
         
         if(user.loans.length > 0){
 
-          return { status: 200, message: "Logged in successfully", hasLoans :true, user };
+          return { status: 200, message: "Logged in successfully", hasLoans :true, deviceID };
         }else{
-          return { status: 200, message: "Logged in successfully", hasLoans :false , user};
+          return { status: 200, message: "Logged in successfully", hasLoans :false , deviceID};
         }
 
       } else {
@@ -22,7 +22,7 @@ const authService = {
 
         await newUser.save();
 
-        return { status: 200, message: "New User created!", user: newUser, hasLoans: false };
+        return { status: 200, message: "New User created!", deviceID, hasLoans: false };
       }
     } else {
       return { status: 400, message: "Bad Request" };

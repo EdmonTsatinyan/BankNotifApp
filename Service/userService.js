@@ -145,19 +145,51 @@ const userService = {
         { new: true }
       );
 
-      if(updatedStatus.dueDate.toISOString().split('T')[0] === updatedStatus.endDate.toISOString().split('T')[0]){
-        console.log("prcar brats");
-      }
+      
 
       if (updatedStatus) {
-        return { status: 200, message: "Updated paidStatus successfully!" };
+        findLoan.paidStatus = false
+        await findLoan.save()
+        if(updatedStatus.dueDate.toISOString().split('T')[0] === updatedStatus.endDate.toISOString().split('T')[0]){
+          return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${updatedStatus.bankName} վարկը`, success:true ,isEnded: true};
+        }else{
+
+          return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
+        }
+
       } else {
-        return { status: 400, message: "Failed to update PaidStatus" };
+        return { status: 400, message: "Failed to update PaidStatus", success:false };
       }
     } else {
-      return { status: 400, message: "Bad Request" };
+      return { status: 400, message: "Bad Request",success:false  };
     }
   },
+  removeLoan: async (loanID) => {
+    if(loanID){
+      const findLoan = await Loan.findById(loanID)
+
+      if(findLoan){
+        const findUser = await User.findOne({deviceID: findLoan.deviceID})
+        if(findUser){
+          findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
+          await findUser.save()
+
+          const removeLoan = await Loan.findByIdAndDelete(loanID)
+          if(removeLoan){
+            return { status: 200, message: "Loan Removed Successfully", success:true };
+          }else{
+            return { status: 400, message: "Failed to remove Loan", success:false };
+          }
+        }else{
+          return { status: 404, message: "User Not Found", success:false  };
+        }
+      }else{
+        return { status: 404, message: "Loan Not Found",success:false  };
+      }
+    }else{
+      return { status: 400, message: "Bad Request",success:false  };
+    }
+  }
 };
 
 export default userService;

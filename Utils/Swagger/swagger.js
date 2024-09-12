@@ -87,6 +87,23 @@ const options = {
             },
           },
         },
+        Login : {
+          type : "object",
+          properties : {
+            deviceID: {
+              type: "string",
+              description: "The phone ID of the user",
+            },
+            hasLoans : {
+              type: "boolean",
+              description:  "Does User Have Loans"
+            },
+            message : {
+              type: "string",
+              description : "Message"
+            }
+          }
+        }
       },
     },
   },
