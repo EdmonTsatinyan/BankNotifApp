@@ -45,7 +45,8 @@ admin.initializeApp({
 
 
 const sendPushNotification = (token,loan) => {
-  const date = new Date(loan.dueDate);
+  if(token && loan){
+    const date = new Date(loan.dueDate);
 
   const formattedDate = date.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -68,6 +69,7 @@ const sendPushNotification = (token,loan) => {
 	  .catch((error) => {
 		console.log('Error sending message:', error);
 	  });
+  }
   };
 
 
