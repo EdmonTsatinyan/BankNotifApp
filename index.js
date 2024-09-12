@@ -33,7 +33,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 
 
-// Function to handle notifications
 
 
 import serviceAccount from './firebase/pay-app-46884-firebase-adminsdk-257yd-5813471c8c.json' assert { type: 'json' };
@@ -105,7 +104,8 @@ async function handleNotifications() {
 
 
 // Schedule the job to run daily at 9:00 AM
-cron.schedule('*/30 * * * * *', handleNotifications);
+// cron.schedule('*/30 * * * * *', handleNotifications);
+cron.schedule('*/3 * * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 
