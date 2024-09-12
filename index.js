@@ -11,7 +11,7 @@ import userRouter from "./Route/userRouter.js";
 import swaggerUI from "swagger-ui-express";
 import specs from "./Utils/Swagger/swagger.js";
 import cron from "node-cron";
-import moment from "moment";
+import admin from "firebase-admin"
 
 import { Loan, User } from "./Model/userModel.js";
 
@@ -34,6 +34,46 @@ app.use("/api/user", userRouter);
 
 
 // Function to handle notifications
+
+
+import serviceAccount from './firebase/pay-app-46884-firebase-adminsdk-257yd-5813471c8c.json' assert { type: 'json' };
+
+
+admin.initializeApp({
+	credential : admin.credential.cert(serviceAccount)
+})
+
+
+const sendPushNotification = (token,loan) => {
+  const date = new Date(loan.dueDate);
+
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const message = {
+	  notification: {
+		title: 'Loan payment',
+		body: `Remember to pay ${loan.amountValute} ${loan.amount} for ${loan.bankName} before ${formattedDate}.`,
+	  },
+	  token: token,
+	};
+  
+	admin.messaging().send(message)
+	  .then((response) => {
+		console.log('Successfully sent message:', response);
+	  })
+	  .catch((error) => {
+		console.log('Error sending message:', error);
+	  });
+  };
+
+
+
+
+
 async function handleNotifications() {
   const now = new Date();
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -42,13 +82,17 @@ async function handleNotifications() {
 
   const allLoans = await Loan.find()
 
-  allLoans.map((loan)=>{
-
-    if(loan.dueDate.toISOString().split('T')[0] === today.toISOString().split('T')[0]){
-      console.log("--------",{loan, message: "Today is your loan pay day"});
-    }
-    if(loan.dueDate.toISOString().split('T')[0] === tomorrow.toISOString().split('T')[0]){
-      console.log("-------",{loan, message: "Tomorrow is your loan pay day"});
+  allLoans.map(async (loan)=>{
+    const user = await User.findOne({deviceID: loan.deviceID})
+    if(user){
+      if(loan.dueDate.toISOString().split('T')[0] === today.toISOString().split('T')[0]){
+        console.log("--------",{loan, message: "Today is your loan pay day"});
+        sendPushNotification(user.firebaseToken,loan)  
+      }
+      if(loan.dueDate.toISOString().split('T')[0] === tomorrow.toISOString().split('T')[0]){
+        console.log("-------",{loan, message: "Tomorrow is your loan pay day"});
+        sendPushNotification(user.firebaseToken,loan)  
+      }
     }
 
   })
@@ -59,7 +103,8 @@ async function handleNotifications() {
 
 
 // Schedule the job to run daily at 9:00 AM
-cron.schedule('55 16 * * *', handleNotifications);
+cron.schedule('*/30 * * * * *', handleNotifications);
+// cron.schedule('20 11 * * *', handleNotifications);
 
 
 const PORT = process.env.PORT || 8000;
