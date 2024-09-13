@@ -60,7 +60,7 @@ const sendPushNotification = (token,loan) => {
     
 	  },
 	  token: token,
-    data: loan._id
+    data: `${loan._id}`
 	};
   
 	admin.messaging().send(message)
