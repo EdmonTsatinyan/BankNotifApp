@@ -106,8 +106,8 @@ async function handleNotifications() {
 
 
 // Schedule the job to run daily at 9:00 AM
-cron.schedule('*/30 * * * * *', handleNotifications);
-// cron.schedule('*/5 * * * *', handleNotifications);
+// cron.schedule('*/30 * * * * *', handleNotifications);
+cron.schedule('*/3 * * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 
