@@ -60,10 +60,10 @@ const sendPushNotification = (token,loan) => {
     
 	  },
 	  token: token,
-    data: `${loan._id}`
+    data : {loanId : `${loan._id}`}
 	};
   
-	admin.messaging().send(message)
+	admin.messaging().send(message,)
 	  .then((response) => {
 		console.log('Successfully sent message:', response);
 	  })
