@@ -2,10 +2,11 @@ import { User } from "../Model/userModel.js";
 
 const authService = {
   logIN: async (deviceID,firebaseToken) => {
-    if (deviceID) {
+    if (deviceID,firebaseToken) {
       const user = await User.findOne({ deviceID }).populate("loans");
       if (user) {
-        
+        user.firebaseToken = firebaseToken
+       await user.save()
         if(user.loans.length > 0){
 
           return { status: 200, message: "Logged in successfully", hasLoans :true, deviceID };
