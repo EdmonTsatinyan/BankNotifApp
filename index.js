@@ -56,7 +56,7 @@ const sendPushNotification = (token,loan) => {
   const message = {
 	  notification: {
 		title: 'Վարկի վճարում',
-		body: {message: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,    loanID: loan._id},
+		body:`Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
 
 	  },
 	  token: token,
