@@ -60,7 +60,7 @@ const sendPushNotification = (token,loan) => {
     
 	  },
 	  token: token,
-    data : {loanId : `${loan._id}`, url: loan.description}
+    data : {loanId : `${loan._id}`, url: loan.description, notificationText: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`}
 	};
   
 	admin.messaging().send(message,)
