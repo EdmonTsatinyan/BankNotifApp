@@ -49,10 +49,7 @@ const sendPushNotification = (token, loan) => {
     });
 
     const message = {
-      notification: {
-        title: "Վարկի վճարում",
-        body: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
-      },
+
       token: token,
       data: {
         loanId: `${loan._id}`,
@@ -104,8 +101,8 @@ async function handleNotifications() {
 }
 
 // Schedule the job to run daily at 9:00 AM
-// cron.schedule('*/30 * * * * *', handleNotifications);
-cron.schedule("*/3 * * * *", handleNotifications);
+cron.schedule('*/30 * * * * *', handleNotifications);
+// cron.schedule("*/3 * * * *", handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;
