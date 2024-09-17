@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const notifSchema = new mongoose.Schema({
-    deviceID:{type:mongoose.Schema.Types.ObjectId},
+    deviceID:{type:String, required:true},
     loanID:{type:mongoose.Schema.Types.ObjectId, ref: "loan"},
     url:{type:String},
     notificationText:{type:String},
