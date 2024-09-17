@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRouter from "./Route/authRouter.js";
 import userRouter from "./Route/userRouter.js";
+import notifRouter from "./Route/notifRouter.js";
 import swaggerUI from "swagger-ui-express";
 import specs from "./Utils/Swagger/swagger.js";
 import cron from "node-cron";
@@ -31,14 +32,17 @@ const __dirname = path.dirname(__filename);
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/notif", notifRouter)
 
 import serviceAccount from "./firebase/pay-app-46884-firebase-adminsdk-257yd-5813471c8c.json" assert { type: "json" };
+import Notif from "./Model/notifModel.js";
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const sendPushNotification = (token, loan) => {
+const sendPushNotification = async (token, loan) => {
   if (token && loan) {
     const date = new Date(loan.dueDate);
 
@@ -61,6 +65,16 @@ const sendPushNotification = (token, loan) => {
         notificationTitle: "Վարկի վճարում",
       },
     };
+
+    const newNotif = new Notif({
+      deviceID: loan.deviceID,
+      loanID: loan._id,
+      url: loan.description,
+      notificationText: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
+      notificationTitle: "Վարկի վճարում",
+  })
+
+    await newNotif.save()
 
     admin
       .messaging()
