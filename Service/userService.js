@@ -89,7 +89,9 @@ const userService = {
     
        
         user.loans.push(newLoan._id);
-        await Promise.all([user.save(),newLoan.save()])
+        await newLoan.save()
+        await user.save()
+        console.log("serrvice-add ----------",newLoan);
         return { status: 200, message: "New Loan Created Successfully!" };
       } else {
         return {
