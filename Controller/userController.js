@@ -21,7 +21,7 @@ const userController = {
     try {
      
       const {deviceID,bankName,amount,dueDate,endDate,description,amountValute} = req.body;
-      console.log("controller-add ----------",body);
+      console.log("controller-add ----------",req.body);
       const response = await userService.addLoan(
         deviceID,
         bankName,
