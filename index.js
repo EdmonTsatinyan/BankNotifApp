@@ -34,7 +34,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/notif", notifRouter)
 
-import serviceAccount from "./firebase/pay-app-46884-firebase-adminsdk-257yd-5813471c8c.json" assert { type: "json" };
+import serviceAccount from "./firebase/bank-app-f43d5-firebase-adminsdk-w5drx-488f9d821e.json" assert { type: "json" };
 import Notif from "./Model/notifModel.js";
 
 
@@ -51,7 +51,8 @@ const sendPushNotification = async (token, loan) => {
       month: "short",
       year: "numeric",
     });
-
+    console.log("firebase----",token);
+    console.log("firebase----",loan);
     const message = {
       notification: {
         title: "Վարկի վճարում",
@@ -64,6 +65,22 @@ const sendPushNotification = async (token, loan) => {
         notificationText: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
         notificationTitle: "Վարկի վճարում",
       },
+      apns: {
+        headers: {
+          'apns-priority': '10', // High priority for immediate delivery
+          'apns-push-type': 'alert' // Ensures it will trigger a notification
+        },
+        payload: {
+          aps: {
+            alert: {
+              title: "Վարկի վճարում",
+              body: `Վճարման հիշեցում՝ ${loan.amount} ${loan.amountValute} ${loan.bankName} մինչև  ${formattedDate}.`,
+            },
+            sound: 'default'
+          }
+        }
+      },
+    
     };
 
     const newNotif = new Notif({
@@ -118,8 +135,8 @@ async function handleNotifications() {
 }
 
 // Schedule the job to run daily at 9:00 AM
-cron.schedule('*/30 * * * * *', handleNotifications);
-// cron.schedule("*/3 * * * *", handleNotifications);
+// cron.schedule('*/30 * * * * *', handleNotifications);
+cron.schedule("*/4 * * * *", handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;
