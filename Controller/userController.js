@@ -19,9 +19,8 @@ const userController = {
   },
   addLoan: async (req, res) => {
     try {
-     
-      const {deviceID,bankName,amount,dueDate,endDate,description,amountValute} = req.body;
-      console.log("controller-add ----------",req.body);
+  
+      const {deviceID,bankName,amount,dueDate,endDate,description,amountValute,bankID} = req.body;
       const response = await userService.addLoan(
         deviceID,
         bankName,
@@ -29,7 +28,8 @@ const userController = {
         dueDate,
         endDate,
         description,
-        amountValute
+        amountValute,
+        bankID
       );
       res.status(response.status).send({message: response.message});
     } catch (error) {

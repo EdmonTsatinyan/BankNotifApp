@@ -67,11 +67,11 @@ const userService = {
       return { status: 400, message: "Bad Request" };
     }
   },
-  addLoan: async (deviceID,bankName,amount,dueDate,endDate,description,amountValute) => {
+  addLoan: async (deviceID,bankName,amount,dueDate,endDate,description,amountValute,bankID) => {
     if (deviceID, bankName, amount, dueDate, endDate, description, amountValute) {
      
       const user = await User.findOne({ deviceID });
-
+     
       const newLoanData = {
         deviceID,
         bankName,
@@ -81,7 +81,9 @@ const userService = {
         description,
         amountValute,
         paidStatus: false,
+        bankID: bankID? bankID : null
       };
+     
 
       if (user) {
         
