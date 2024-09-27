@@ -139,31 +139,59 @@ const userService = {
     }
   },
   changePaidStatus: async (loanID) => {
-    if ((loanID)) {
-      const findLoan = await Loan.findById(loanID)
-      const newDueDate = addOneMonth(findLoan.dueDate);
-      const updatedStatus = await Loan.findByIdAndUpdate(
-        loanID,
-        {  paidStatus: true, 
-          dueDate: new Date(newDueDate) },
-        { new: true }
-      );
-
+    if (loanID) {
       
+      const findLoan = await Loan.findById(loanID)
+      
+      
+      if(findLoan){
+       const newDueDate = addOneMonth(findLoan.dueDate);
 
-      if (updatedStatus) {
-        findLoan.paidStatus = false
-        await findLoan.save()
-        if(updatedStatus.dueDate.toISOString().split('T')[0] === updatedStatus.endDate.toISOString().split('T')[0]){
-          return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${updatedStatus.bankName} վարկը`, success:true ,isEnded: true};
+      if(findLoan.dueDate.toISOString().split('T')[0] === findLoan.endDate.toISOString().split('T')[0]){
+        const findUser = await User.findOne({deviceID: findLoan.deviceID})
+        const deletedLoan = await Loan.findByIdAndDelete(loanID)
+
+
+        if(deletedLoan && findUser){
+            findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
+            await findUser.save()
+            return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${findLoan.bankName} վարկը`, success:true ,isEnded: true};
+          
         }else{
-
-          return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
+          return { status: 400, message: "Failed to End Loan", success:false };
         }
 
-      } else {
-        return { status: 400, message: "Failed to update PaidStatus", success:false };
+
+      }else{
+        const updatedStatus = await Loan.findByIdAndUpdate(
+          loanID,
+          {  paidStatus: true, 
+            dueDate: new Date(newDueDate) },
+          { new: true }
+        );
+  
+        
+  
+        if (updatedStatus) {
+          findLoan.paidStatus = false
+          
+          await findLoan.save()
+          
+  
+            return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
+          
+  
+        } else {
+          return { status: 400, message: "Failed to update PaidStatus", success:false };
+        }
       }
+     }else{
+      
+      return { status: 404, message: "Loan Not Found",success:false  };
+     }
+
+
+
     } else {
       return { status: 400, message: "Bad Request",success:false  };
     }
