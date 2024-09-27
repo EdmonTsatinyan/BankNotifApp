@@ -136,7 +136,7 @@ async function handleNotifications() {
 
 // Schedule the job to run daily at 9:00 AM
 // cron.schedule('*/30 * * * * *', handleNotifications);
-// cron.schedule("*/4 * * * *", handleNotifications);
+cron.schedule("*/4 * * * *", handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;
