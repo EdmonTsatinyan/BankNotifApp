@@ -209,7 +209,7 @@ const userService = {
 
       if(findLoan){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
-        const findNotifs = await Notif.find()
+        let findNotifs = await Notif.find()
 
         console.log("service--",findNotifs);
         if(findUser){
