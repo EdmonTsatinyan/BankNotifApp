@@ -1,3 +1,4 @@
+import Notif from "../Model/notifModel.js";
 import { Loan, User } from "../Model/userModel.js";
 import mongoose from "mongoose";
 
@@ -126,6 +127,7 @@ const userService = {
         bankID,
       };
 
+
       const updatedLoan = await Loan.findByIdAndUpdate(
         loanID,
         { $set: updatedLoanData },
@@ -151,12 +153,15 @@ const userService = {
 
       if(findLoan.dueDate.toISOString().split('T')[0] === findLoan.endDate.toISOString().split('T')[0]){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
+        const findnotifs = await Notif.find()
         const deletedLoan = await Loan.findByIdAndDelete(loanID)
 
 
         if(deletedLoan && findUser){
             findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
+            findnotifs = findnotifs.filter(notif => notif.loanID.toString() !== loanID.toString())
             await findUser.save()
+            await findnotifs.save()
             return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${findLoan.bankName} վարկը`, success:true ,isEnded: true};
           
         }else{
@@ -204,9 +209,13 @@ const userService = {
 
       if(findLoan){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
+        const findNotifs = await Notif.find()
         if(findUser){
           findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
+          findNotifs = findNotifs.filter(notif => notif.loanID.toString() !== loanID.toString())
+          await findNotifs.save()
           await findUser.save()
+
 
           const removeLoan = await Loan.findByIdAndDelete(loanID)
           if(removeLoan){
