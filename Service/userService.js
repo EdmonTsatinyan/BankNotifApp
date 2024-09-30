@@ -153,15 +153,15 @@ const userService = {
 
       if(findLoan.dueDate.toISOString().split('T')[0] === findLoan.endDate.toISOString().split('T')[0]){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
-        const findnotifs = await Notif.find()
+        let findNotifs = await Notif.deleteMany({loanID: loanID})
         const deletedLoan = await Loan.findByIdAndDelete(loanID)
 
 
         if(deletedLoan && findUser){
             findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
-            findnotifs = findnotifs.filter(notif => notif.loanID.toString() !== loanID.toString())
+           
             await findUser.save()
-            await findnotifs.save()
+       
             return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${findLoan.bankName} վարկը`, success:true ,isEnded: true};
           
         }else{
@@ -209,16 +209,15 @@ const userService = {
 
       if(findLoan){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
-        let findNotifs = await Notif.find()
+        let findNotifs = await Notif.deleteMany({loanID: loanID})
 
-        console.log("service--",findNotifs);
         if(findUser){
           findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
-          findNotifs = findNotifs.filter(notif => notif.loanID.toString() !== loanID.toString())
-          await findNotifs.save()
+         
+        
           await findUser.save()
 
-          console.log("service----1----",findNotifs);
+       
 
           const removeLoan = await Loan.findByIdAndDelete(loanID)
           if(removeLoan){
