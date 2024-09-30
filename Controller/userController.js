@@ -44,7 +44,8 @@ const userController = {
         dueDate,
         endDate,
         description,
-        amountValute
+        amountValute,
+        bankID
       } = req.body;
       const loanID = req.params.loanID;
       const response = await userService.changeloan(
@@ -54,7 +55,8 @@ const userController = {
         dueDate,
         endDate,
         description,
-        amountValute
+        amountValute,
+        bankID
       );
       res.status(response.status).send({message: response.message});
     } catch (error) {

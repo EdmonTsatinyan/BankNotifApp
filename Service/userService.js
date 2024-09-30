@@ -112,7 +112,8 @@ const userService = {
     dueDate,
     endDate,
     description,
-    amountValute
+    amountValute,
+    bankID
   ) => {
     if (loanID) {
       const updatedLoanData = {
@@ -122,6 +123,7 @@ const userService = {
         endDate: endDate,
         description: description,
         amountValute: amountValute,
+        bankID,
       };
 
       const updatedLoan = await Loan.findByIdAndUpdate(
