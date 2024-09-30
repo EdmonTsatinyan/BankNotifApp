@@ -81,6 +81,7 @@ const userController = {
   removeLoan : async(req,res)=>{
     try {
       const {loanID} = req.params
+      console.log("controller----",loanID);
 
       const data = await userService.removeLoan(loanID)
 

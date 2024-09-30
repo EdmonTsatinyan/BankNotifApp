@@ -210,12 +210,15 @@ const userService = {
       if(findLoan){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
         const findNotifs = await Notif.find()
+
+        console.log("service--",findNotifs);
         if(findUser){
           findUser.loans = findUser.loans.filter(loan => loan.toString() !== loanID.toString())
           findNotifs = findNotifs.filter(notif => notif.loanID.toString() !== loanID.toString())
           await findNotifs.save()
           await findUser.save()
 
+          console.log("service----1----",findNotifs);
 
           const removeLoan = await Loan.findByIdAndDelete(loanID)
           if(removeLoan){
