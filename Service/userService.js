@@ -162,7 +162,7 @@ const userService = {
            
             await findUser.save()
        
-            return { status: 200, message: `Շնորհավորում ենք: Դուք ամբողջությամբ վճարեցիք ${findLoan.bankName} վարկը`, success:true ,isEnded: true};
+            return { status: 200, message: `Դուք ամբողջությամբ վճարեցիք ${findLoan.bankName} վարկը`, success:true ,isEnded: true};
           
         }else{
           return { status: 400, message: "Failed to End Loan", success:false };
