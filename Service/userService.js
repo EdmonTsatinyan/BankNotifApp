@@ -151,7 +151,7 @@ const userService = {
       if(findLoan){
        const newDueDate = addOneMonth(findLoan.dueDate);
 
-      if(findLoan.dueDate.toISOString().split('T')[0] === findLoan.endDate.toISOString().split('T')[0]){
+      if(findLoan.dueDate.toISOString().split('T')[0] >= findLoan.endDate.toISOString().split('T')[0]){
         const findUser = await User.findOne({deviceID: findLoan.deviceID})
         let findNotifs = await Notif.deleteMany({loanID: loanID})
         const deletedLoan = await Loan.findByIdAndDelete(loanID)
