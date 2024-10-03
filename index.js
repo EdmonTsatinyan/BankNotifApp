@@ -110,7 +110,8 @@ const sendEndNotifictaion = async (token, loan) => {
     const findUser = await User.findOne({deviceID: loan.deviceID})
 
     if(findUser){
-      findUser.loans = findUser.loans.filter(loan => loan.toString() !== loan._id.toString())
+      findUser.loans = findUser.loans.filter(l=> l.toString() !== loan._id.toString())
+   
       await findUser.save() 
       const deletedLoan = await Loan.findByIdAndDelete(loan._id)
 
@@ -186,14 +187,14 @@ async function handleNotifications() {
         loan.dueDate.toISOString().split("T")[0] ===
         today.toISOString().split("T")[0]
       ) {
-        sendPushNotification(user.firebaseToken, loan);
+        // sendPushNotification(user.firebaseToken, loan);
         
       }
       if (
         loan.dueDate.toISOString().split("T")[0] ===
         tomorrow.toISOString().split("T")[0]
       ) {
-        sendPushNotification(user.firebaseToken, loan);
+        // sendPushNotification(user.firebaseToken, loan);
         
       }
       if(loan.endDate.toISOString().split("T")[0] === today.toISOString().split("T")[0] && loan.isEnded){
@@ -206,7 +207,7 @@ async function handleNotifications() {
 
 
 // cron.schedule('*/10 * * * * *', handleNotifications);
-// cron.schedule('0 */4 * * *', handleNotifications);
+cron.schedule('0 */4 * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;
