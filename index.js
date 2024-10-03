@@ -206,7 +206,7 @@ async function handleNotifications() {
 
 
 // cron.schedule('*/10 * * * * *', handleNotifications);
-cron.schedule('0 */4 * * *', handleNotifications);
+// cron.schedule('0 */4 * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;

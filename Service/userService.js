@@ -173,7 +173,7 @@ const userService = {
         if(findLoan.endDate.toISOString().split('T')[0] < new Date(newDueDate).toISOString().split('T')[0]){
           findLoan.isEnded = true
           await findLoan.save()
-          return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: true};
+          return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
         }else{
 
           const updatedStatus = await Loan.findByIdAndUpdate(
