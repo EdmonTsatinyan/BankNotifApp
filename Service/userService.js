@@ -53,7 +53,7 @@ const userService = {
 
 
         await user.save();
-
+        console.log("loans", user)
         if(user.loans.length  > 0){
 
           return {status: 200, user, hasLoans: true}
