@@ -18,7 +18,8 @@ const loanSchema = new mongoose.Schema({
     description: { type: String}, 
     amountValute: { type: String, required: true }, 
     paidStatus: { type: Boolean, default: false },
-    bankID: { type: String, }
+    bankID: { type: String, },
+    isEnded : {type: Boolean, default: false}
 }) 
  
 const Loan = mongoose.model("Loan", loanSchema) 

@@ -51,8 +51,7 @@ const sendPushNotification = async (token, loan) => {
       month: "short",
       year: "numeric",
     });
-    console.log("firebase----",token);
-    console.log("firebase----",loan);
+  
     const message = {
       notification: {
         title: "Վարկի վճարում",
@@ -67,8 +66,8 @@ const sendPushNotification = async (token, loan) => {
       },
       apns: {
         headers: {
-          'apns-priority': '10', // High priority for immediate delivery
-          'apns-push-type': 'alert' // Ensures it will trigger a notification
+          'apns-priority': '10', 
+          'apns-push-type': 'alert' 
         },
         payload: {
           aps: {
@@ -105,7 +104,71 @@ const sendPushNotification = async (token, loan) => {
   }
 };
 
+const sendEndNotifictaion = async (token, loan) => {
+  if (token && loan) {
+
+    const findUser = await User.findOne({deviceID: loan.deviceID})
+
+    if(findUser){
+      findUser.loans = findUser.loans.filter(loan => loan.toString() !== loan._id.toString())
+      await findUser.save() 
+      const deletedLoan = await Loan.findByIdAndDelete(loan._id)
+
+      if(deletedLoan){
+        const message = {
+          notification: {
+            title: "Շնորհավորում ենք",
+            body: `Դուք ամբողջությամբ վճարեցիք ${loan.bankName} վարկը`,
+          },
+          token: token,
+          data: {
+            loanId: `${loan._id}`,
+            url: loan.description,
+            notificationText: `Դուք ամբողջությամբ վճարեցիք ${loan.bankName} վարկը`,
+            notificationTitle: "Շնորհավորում ենք",
+          },
+          apns: {
+            headers: {
+              'apns-priority': '10', 
+              'apns-push-type': 'alert' 
+            },
+            payload: {
+              aps: {
+                alert: {
+                  title: "Շնորհավորում ենք",
+                  body: `Դուք ամբողջությամբ վճարեցիք ${loan.bankName} վարկը`,
+                },
+                sound: 'default'
+              }
+            }
+          },
+        
+        };
+    
+        admin
+        .messaging()
+        .send(message)
+        .then((response) => {
+          console.log("Successfully sent message:", response);
+        })
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
+      }else{
+        console.log("chjnjvav");
+      }
+    }else{
+      console.log("chka user");
+    }
+
+
+
+
+  }
+}
+
 async function handleNotifications() {
+
   const now = new Date();
   const today = new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
@@ -118,25 +181,32 @@ async function handleNotifications() {
   allLoans.map(async (loan) => {
     const user = await User.findOne({ deviceID: loan.deviceID });
     if (user) {
+
       if (
         loan.dueDate.toISOString().split("T")[0] ===
         today.toISOString().split("T")[0]
       ) {
         sendPushNotification(user.firebaseToken, loan);
+        
       }
       if (
         loan.dueDate.toISOString().split("T")[0] ===
         tomorrow.toISOString().split("T")[0]
       ) {
         sendPushNotification(user.firebaseToken, loan);
+        
+      }
+      if(loan.endDate.toISOString().split("T")[0] === today.toISOString().split("T")[0] && loan.isEnded){
+ 
+        sendEndNotifictaion(user.firebaseToken, loan)
       }
     }
   });
 }
 
-// Schedule the job to run daily at 9:00 AM
-// cron.schedule('*/30 * * * * *', handleNotifications);
-cron.schedule("*/4 * * * *", handleNotifications);
+
+// cron.schedule('*/10 * * * * *', handleNotifications);
+cron.schedule('0 */4 * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;

@@ -170,26 +170,33 @@ const userService = {
 
 
       }else{
-        const updatedStatus = await Loan.findByIdAndUpdate(
-          loanID,
-          {  paidStatus: true, 
-            dueDate: new Date(newDueDate) },
-          { new: true }
-        );
-  
-        
-  
-        if (updatedStatus) {
-          findLoan.paidStatus = false
-          
+        if(findLoan.endDate.toISOString().split('T')[0] < new Date(newDueDate).toISOString().split('T')[0]){
+          findLoan.isEnded = true
           await findLoan.save()
+          return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: true};
+        }else{
+
+          const updatedStatus = await Loan.findByIdAndUpdate(
+            loanID,
+            {  paidStatus: true, 
+              dueDate: new Date(newDueDate) },
+            { new: true }
+          );
+    
           
-  
-            return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
-          
-  
-        } else {
-          return { status: 400, message: "Failed to update PaidStatus", success:false };
+    
+          if (updatedStatus) {
+            findLoan.paidStatus = false
+            
+            await findLoan.save()
+            
+    
+              return { status: 200, message: "Updated paidStatus successfully!", success:true, isEnded: false};
+            
+    
+          } else {
+            return { status: 400, message: "Failed to update PaidStatus", success:false };
+          }
         }
       }
      }else{
