@@ -187,14 +187,14 @@ async function handleNotifications() {
         loan.dueDate.toISOString().split("T")[0] ===
         today.toISOString().split("T")[0]
       ) {
-        // sendPushNotification(user.firebaseToken, loan);
+        sendPushNotification(user.firebaseToken, loan);
         
       }
       if (
         loan.dueDate.toISOString().split("T")[0] ===
         tomorrow.toISOString().split("T")[0]
       ) {
-        // sendPushNotification(user.firebaseToken, loan);
+        sendPushNotification(user.firebaseToken, loan);
         
       }
       if(loan.endDate.toISOString().split("T")[0] === today.toISOString().split("T")[0] && loan.isEnded){
