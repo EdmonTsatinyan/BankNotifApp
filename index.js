@@ -207,8 +207,9 @@ async function handleNotifications() {
 
 
 // cron.schedule('*/10 * * * * *', handleNotifications);
-cron.schedule('0 */4 * * *', handleNotifications);
+// cron.schedule('0 */4 * * *', handleNotifications);
 // cron.schedule('20 11 * * *', handleNotifications);
+cron.schedule('0 9 * * *', handleNotifications);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server is running on ${PORT} •ᴗ• `));
